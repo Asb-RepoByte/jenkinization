@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Todo List</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; }
+        .completed { text-decoration: line-through; color: gray; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 0.5rem 0; }
+        form { margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <h1>Todo List</h1>
+
+    <ul>
+        <li th:each="task : ${tasks}">
+            <span th:class="${task.completed} ? 'completed'" th:text="${task.name}"></span>
+            <a th:if="!${task.completed}" th:href="@{/complete/{id}(id=${task.id})}">✔ Complete</a>
+        </li>
+    </ul>
+
+    <form th:action="@{/add}" th:object="${newTask}" method="post">
+        <input type="text" th:field="*{name}" placeholder="Enter a new task" required />
+        <button type="submit">Add Task</button>
+    </form>
+</body>
+</html>
