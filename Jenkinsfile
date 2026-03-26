@@ -59,15 +59,22 @@ pipeline {
     }
 
     post {
-        always {
-            // Clean up: stop the app
-            sh 'pkill -f "java -jar target/.*\\.jar" || true'
+            always {
+                sh 'pkill -f "java -jar target/.*\\.jar" || true'
+            }
+            success {
+                emailext(
+                    subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                    body: "The build was successful.\nCheck console output at ${env.BUILD_URL}",
+                    to: '24065@esp.mr'   // replace with your email
+                )
+            }
+            failure {
+                emailext(
+                    subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                    body: "The build failed.\nCheck console output at ${env.BUILD_URL}",
+                    to: '24065@esp.mr'
+                )
+            }
         }
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
-    }
 }
